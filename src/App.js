@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Container, Grid, Link, SvgIcon, Typography } from '@mui/material';
+import { Box, Container, Grid, SvgIcon, Typography } from '@mui/material';
 import Search from './components/Search/Search';
 import WeeklyForecast from './components/WeeklyForecast/WeeklyForecast';
 import TodayWeather from './components/TodayWeather/TodayWeather';
@@ -11,7 +11,6 @@ import { ReactComponent as SplashIcon } from './assets/splash-icon.svg';
 import Logo from './assets/logo.png';
 import ErrorBox from './components/Reusable/ErrorBox';
 import { ALL_DESCRIPTIONS } from './utilities/DateConstants';
-// import GitHubIcon from '@mui/icons-material/GitHub';
 import ListIcon from '@mui/icons-material/List';
 import {
   getTodayForecastWeather,
@@ -24,28 +23,18 @@ function App() {
   const [weekForecast, setWeekForecast] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [searchValue, setSearchValue] = useState();
 
-  const searchChangeHandler = (enteredData) => {
+  const searchChangeHandler = async (enteredData) => {
+    const [latitude, longitude] = enteredData?.value?.split(' ');
     setIsLoading(true);
 
-    const [latitude, longitude] = enteredData?.value?.split(' ');
-
-    fetchWeatherAndUpdateState(enteredData, latitude, longitude)
-      .then(() => {
-        setIsLoading(false);
-      });
-  };
-
-  const fetchWeatherAndUpdateState = async (enteredData, latitude, longitude) => {
     const currentDate = transformDateFormat();
     const date = new Date();
-    const dt_now = Math.floor(date.getTime() / 1000);
+    let dt_now = Math.floor(date.getTime() / 1000);
 
     try {
       const [todayWeatherResponse, weekForecastResponse] =
         await fetchWeatherData(latitude, longitude);
-
       const all_today_forecasts_list = getTodayForecastWeather(
         weekForecastResponse,
         currentDate,
@@ -66,181 +55,8 @@ function App() {
     } catch (error) {
       setError(true);
     }
-
-    // Update the search value and save to local storage
-    setSearchValue(enteredData);
-    localStorage.setItem('searchValue', JSON.stringify(enteredData));
+    setIsLoading(false);
   };
-
-  useEffect(() => {
-    // Load from local storage on mount
-    const storedSearchValue = localStorage.getItem('searchValue');
-    if (storedSearchValue) {
-      setSearchValue(JSON.parse(storedSearchValue));
-    }
-  }, []);
-  // const [todayWeather, setTodayWeather] = useState(null);
-  // const [todayForecast, setTodayForecast] = useState([]);
-  // const [weekForecast, setWeekForecast] = useState(null);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState(false);
-  // const [searchValue, setSearchValue] = useState();
-
-  // const searchChangeHandler = (enteredData) => {
-  //   // Start loading state
-  //   setIsLoading(true);
-  
-  //   // Extract latitude and longitude
-  //   const [latitude, longitude] = searchValue?.value?.split(' ');
-  
-  //   // Perform asynchronous operations
-  //   fetchWeatherAndUpdateState(searchValue, latitude, longitude)
-  //     .then(() => {
-  //       // Loading is complete
-  //       setIsLoading(false);
-  //     });
-  // };
-  
-  // const fetchWeatherAndUpdateState = async (enteredData, latitude, longitude) => {
-  //   const currentDate = transformDateFormat();
-  //   const date = new Date();
-  //   const dt_now = Math.floor(date.getTime() / 1000);
-  
-  //   try {
-  //     const [todayWeatherResponse, weekForecastResponse] =
-  //       await fetchWeatherData(latitude, longitude);
-  
-  //     const all_today_forecasts_list = getTodayForecastWeather(
-  //       weekForecastResponse,
-  //       currentDate,
-  //       dt_now
-  //     );
-  
-  //     const all_week_forecasts_list = getWeekForecastWeather(
-  //       weekForecastResponse,
-  //       ALL_DESCRIPTIONS
-  //     );
-  
-  //     setTodayForecast([...all_today_forecasts_list]);
-  //     setTodayWeather({ city: enteredData.label, ...todayWeatherResponse });
-  //     setWeekForecast({
-  //       city: enteredData.label,
-  //       list: all_week_forecasts_list,
-  //     });
-  //   } catch (error) {
-  //     setError(true);
-  //   }
-  //   localStorage.setItem('searchValue', JSON.stringify(enteredData));
-  //   // Update the search value
-  //   setSearchValue(enteredData);
-  // };
-
-  // const loadFromLocalStorage = () => {
-  //   const storedSearchValue = localStorage.getItem('searchValue');
-  //   if (storedSearchValue) {
-  //     setSearchValue(JSON.parse(storedSearchValue));
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   // Load from local storage on mount
-  //   loadFromLocalStorage();
-  // }, []);
-  
-  // const searchChangeHandler = async (enteredData) => {
-  //   // Use the callback function to access the updated value
-  //   setSearchValue((prevSearchValue) => {
-  //     console.log(prevSearchValue, enteredData);
-  
-  //   const [latitude, longitude] = enteredData?.value?.split(' ');
-  //     setIsLoading(true);
-  
-  //   const currentDate = transformDateFormat();
-  //   const date = new Date();
-  //   let dt_now = Math.floor(date.getTime() / 1000);
-
-  //   try {
-  //     const [todayWeatherResponse, weekForecastResponse] =
-  //       await fetchWeatherData(latitude, longitude);
-  //     const all_today_forecasts_list = getTodayForecastWeather(
-  //       weekForecastResponse,
-  //       currentDate,
-  //       dt_now
-  //     );
-
-  //     const all_week_forecasts_list = getWeekForecastWeather(
-  //       weekForecastResponse,
-  //       ALL_DESCRIPTIONS
-  //     );
-
-  //     setTodayForecast([...all_today_forecasts_list]);
-  //     setTodayWeather({ city: enteredData.label, ...todayWeatherResponse });
-  //     setWeekForecast({
-  //       city: enteredData.label,
-  //       list: all_week_forecasts_list,
-  //     });
-  //   } catch (error) {
-  //     setError(true);
-  //   }
-  
-  //     setIsLoading(false);
-  
-  //     // Return the new value for setSearchValue
-  //     return enteredData;
-  //   });
-  // };
-  
-
-  // const searchChangeHandler = async (enteredData) => {
-  //   setSearchValue(enteredData);
-  //   console.log(searchValue,enteredData)
-  //   const [latitude, longitude] = searchValue?.value?.split(' ');
-
-  //   setIsLoading(true);
-
-  //   const currentDate = transformDateFormat();
-  //   const date = new Date();
-  //   let dt_now = Math.floor(date.getTime() / 1000);
-
-  //   try {
-  //     const [todayWeatherResponse, weekForecastResponse] =
-  //       await fetchWeatherData(latitude, longitude);
-  //     const all_today_forecasts_list = getTodayForecastWeather(
-  //       weekForecastResponse,
-  //       currentDate,
-  //       dt_now
-  //     );
-
-  //     const all_week_forecasts_list = getWeekForecastWeather(
-  //       weekForecastResponse,
-  //       ALL_DESCRIPTIONS
-  //     );
-
-  //     setTodayForecast([...all_today_forecasts_list]);
-  //     setTodayWeather({ city: enteredData.label, ...todayWeatherResponse });
-  //     setWeekForecast({
-  //       city: enteredData.label,
-  //       list: all_week_forecasts_list,
-  //     });
-  //   } catch (error) {
-  //     setError(true);
-  //   }
-
-  //   setIsLoading(false);
-  // };
-
-  // useEffect(() => {
-  //   // Save to local storage when searchValue changes
-  //   localStorage.setItem('kk', JSON.stringify(searchValue));
-  // }, [searchValue]);
-
-  // useEffect(() => {
-  //   // Retrieve from local storage on component mount
-  //   const storedSearchValue = localStorage.getItem('kk');
-  //   if (storedSearchValue) {
-  //     setSearchValue(JSON.parse(storedSearchValue));
-  //   }
-  // }, []); // Empty dependency array means it only runs once on component mount
 
 
   let appContent = (
