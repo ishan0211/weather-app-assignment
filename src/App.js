@@ -25,9 +25,9 @@ function App() {
   const [error, setError] = useState(false);
 
   const searchChangeHandler = async (enteredData) => {
+    console.log(enteredData)
     const [latitude, longitude] = enteredData?.value?.split(' ');
     setIsLoading(true);
-
     const currentDate = transformDateFormat();
     const date = new Date();
     let dt_now = Math.floor(date.getTime() / 1000);
@@ -35,7 +35,8 @@ function App() {
     try {
       const [todayWeatherResponse, weekForecastResponse] =
         await fetchWeatherData(latitude, longitude);
-      const all_today_forecasts_list = getTodayForecastWeather(
+        console.log("lol")
+        const all_today_forecasts_list = getTodayForecastWeather(
         weekForecastResponse,
         currentDate,
         dt_now
@@ -53,6 +54,7 @@ function App() {
         list: all_week_forecasts_list,
       });
     } catch (error) {
+      console.log("lolo")
       setError(true);
     }
     setIsLoading(false);

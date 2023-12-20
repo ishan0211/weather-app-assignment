@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { fetchCities } from '../../api/OpenWeatherService';
 const Search = ({ onSearchChange }) => {
-  const [searchValue, setSearchValue] = useState(null);
+  const [searchValue, setSearchValue] = useState({value: '24.583333333 73.683333333', label: 'Udaipur, IN'});
   const loadOptions = async (inputValue) => {
     const citiesList = await fetchCities(inputValue);
 
@@ -30,13 +30,14 @@ const Search = ({ onSearchChange }) => {
     }
   }, []);
 
-  useEffect(()=>{
-    onSearchChange(searchValue)
-  },[searchValue])
-
   useEffect(() => {
     localStorage.setItem('default_key', JSON.stringify(searchValue));
   }, [searchValue]);
+
+  useEffect(()=>{
+    console.log(searchValue,"aa")
+    onSearchChange(searchValue)
+  },[searchValue])
 
   return (
     <AsyncPaginate
