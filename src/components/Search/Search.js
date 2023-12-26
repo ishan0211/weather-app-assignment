@@ -23,11 +23,7 @@ const Search = ({ onSearchChange }) => {
 
   useEffect(() => {
     const storedSearchValue = localStorage.getItem('default_key');
-    if (!storedSearchValue) {
-      setSearchValue({value: '24.583333333 73.683333333', label: 'Udaipur, IN'}); 
-    } else {
-      setSearchValue(JSON.parse(storedSearchValue));
-    }
+    setSearchValue(JSON.parse(storedSearchValue));
   }, []);
 
   useEffect(() => {
@@ -35,7 +31,6 @@ const Search = ({ onSearchChange }) => {
   }, [searchValue]);
 
   useEffect(()=>{
-    console.log(searchValue,"aa")
     onSearchChange(searchValue)
   },[searchValue])
 

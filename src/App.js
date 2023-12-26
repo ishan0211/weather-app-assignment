@@ -35,7 +35,6 @@ function App() {
     try {
       const [todayWeatherResponse, weekForecastResponse] =
         await fetchWeatherData(latitude, longitude);
-        console.log("lol")
         const all_today_forecasts_list = getTodayForecastWeather(
         weekForecastResponse,
         currentDate,
