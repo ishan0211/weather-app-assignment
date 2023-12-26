@@ -30,9 +30,9 @@ const Search = ({ onSearchChange }) => {
     localStorage.setItem('default_key', JSON.stringify(searchValue));
   }, [searchValue]);
 
-  useEffect(()=>{
-    onSearchChange(searchValue)
-  },[searchValue])
+  useEffect(() => {
+    onSearchChange(searchValue);
+  }, [searchValue]);
 
   return (
     <AsyncPaginate
